@@ -1,0 +1,8 @@
+from django.shortcuts import render
+
+def login(request):
+    return render(request, 'users/login.html')
+
+
+def registrations(request):
+    return render(request, 'users/registration.html')

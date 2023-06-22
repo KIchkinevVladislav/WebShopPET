@@ -56,6 +56,14 @@ class Product(models.Model):
         verbose_name_plural = 'Товары'
 
 
+class BasketQuerySet(models.QuerySet):
+    def total_sum(self):
+        return sum(basket.sum() for basket in self)
+
+    def total_quantity(self):
+        return sum(basket.quantity for basket in self)
+
+
 class Basket(models.Model):
     user = models.ForeignKey(
         to=User, 
@@ -78,6 +86,11 @@ class Basket(models.Model):
     
     def __str__(self):
         return f'Корзина для пользователя {self.user.username} | Товары: {self.product.name}'
+    
+    objects = BasketQuerySet.as_manager()
+
+    def sum(self):
+        return self.product.price * self.quantity
     
     class Meta():
         verbose_name = 'Корзина с товарами'

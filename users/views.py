@@ -46,6 +46,7 @@ def profile(request):
            print(form.errors)
     else:
         form = UserProfileForm(instance=request.user)
+
     context = {
         'title': 'Store - Профиль', 
         'form': form,

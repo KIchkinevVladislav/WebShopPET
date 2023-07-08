@@ -1,21 +1,22 @@
 
-from django.shortcuts import render, HttpResponseRedirect
-from django.contrib import auth, messages
+# from django.shortcuts import render, HttpResponseRedirect
+# from django.contrib import auth, messages
 from django.urls import reverse, reverse_lazy
 from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.auth.views import LoginView
+from django.contrib.messages.views import SuccessMessageMixin
 
 from users.models import User
 from users.forms import UserLoginForm, UserRegistrationForm, UserProfileForm
 from products.models import Basket
+from common.views import TitleMixin
 
 
-class UserLoginView(LoginView):
+class UserLoginView(TitleMixin, LoginView):
     template_name = 'users/login.html'
     form_class = UserLoginForm
+    title = 'Store - Авторизация'
 
-    def get_success_url(self):
-        return reverse_lazy('index')
 
 # def login(request):
 #     if request.method == 'POST':
@@ -33,16 +34,14 @@ class UserLoginView(LoginView):
 #     return render(request, 'users/login.html', context)
 
 
-class UserRegistrarionView(CreateView):
+class UserRegistrarionView(SuccessMessageMixin, TitleMixin, CreateView):
     model = User
     form_class = UserRegistrationForm
     template_name = 'users/registration.html'
     success_url = reverse_lazy('users:login')
+    success_message = 'Поздравляем. Вы успешно зарегистрированы!'
+    title = 'Store - Регистрация'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data()
-        context['title'] = 'Store - Регистрация'
-        return context
 
 # def registrations(request):
 #     if request.method == 'POST':
@@ -57,10 +56,11 @@ class UserRegistrarionView(CreateView):
 #     return render(request, 'users/registration.html', context)
 
 
-class UserProfileView(UpdateView):
+class UserProfileView(TitleMixin, UpdateView):
     model = User
     form_class = UserProfileForm
     template_name = 'users/profile.html'
+    title = 'Store - Личный кабинет'
     
     # переопредялем метод для для получения текущего пользователя
     def get_object(self, queryset=None):
@@ -68,8 +68,7 @@ class UserProfileView(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
-        context.update({'title': 'Store - Личный кабинет',
-                        'baskets': Basket.objects.filter(user=self.object)})
+        context['baskets'] = Basket.objects.filter(user=self.object)
         return context
     
     def get_success_url(self):
@@ -96,6 +95,6 @@ class UserProfileView(UpdateView):
 #     return render(request, 'users/profile.html', context)
 
 
-def logout(request):
-    auth.logout(request)
-    return HttpResponseRedirect(reverse('index'))
+# def logout(request):
+#     auth.logout(request)
+#     return HttpResponseRedirect(reverse('index'))

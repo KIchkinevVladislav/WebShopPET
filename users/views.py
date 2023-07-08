@@ -1,7 +1,8 @@
 from django.shortcuts import render, HttpResponseRedirect
 from django.contrib import auth, messages
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
+from django.views.generic.edit import CreateView, UpdateView
 
 from users.models import User
 from users.forms import UserLoginForm, UserRegistrationForm, UserProfileForm
@@ -23,17 +24,29 @@ def login(request):
     return render(request, 'users/login.html', context)
 
 
-def registrations(request):
-    if request.method == 'POST':
-        form = UserRegistrationForm(data=request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Поздравляем. Вы успешно зарегистрированы!')
-            return HttpResponseRedirect(reverse('users:login'))
-    else:
-        form = UserRegistrationForm
-    context = {'form': form}
-    return render(request, 'users/registration.html', context)
+class UserRegistrarionView(CreateView):
+    model = User
+    form_class = UserRegistrationForm
+    template_name = 'users/registration.html'
+    success_url = reverse_lazy('users:login')
+
+
+# def registrations(request):
+#     if request.method == 'POST':
+#         form = UserRegistrationForm(data=request.POST)
+#         if form.is_valid():
+#             form.save()
+#             messages.success(request, 'Поздравляем. Вы успешно зарегистрированы!')
+#             return HttpResponseRedirect(reverse('users:login'))
+#     else:
+#         form = UserRegistrationForm
+#     context = {'form': form}
+#     return render(request, 'users/registration.html', context)
+
+
+class UserProfileView(UpdateView):
+    pass
+
 
 
 @login_required

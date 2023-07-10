@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from users.models import User, EmailVerifivation
+from users.models import User, EmailVerification
 from products.admin import BasketAdmin
 
 
@@ -10,7 +10,7 @@ class UserAdmin(admin.ModelAdmin):
     inlines = (BasketAdmin,)
 
 
-@admin.register(EmailVerifivation)
+@admin.register(EmailVerification)
 class EmailVerifivationAdmin(admin.ModelAdmin):
     list_display = ('code', 'user', 'expiration')
     fields = ('code', 'user', 'expiration', 'created')

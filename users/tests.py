@@ -1,14 +1,16 @@
-from http import HTTPStatus
 from datetime import timedelta
-from django.utils.timezone import now
+from http import HTTPStatus
 
 from django.test import TestCase
 from django.urls import reverse
+from django.utils.timezone import now
 
-from users.models import User, EmailVerification
-from users.forms import UserRegistrationForm
+from users.models import EmailVerification, User
+
 
 class UserRegistarationTestCase(TestCase):
+    """Проверка логики регистрации пользователя"""
+
 
     def setUp(self):
         self.data = {
@@ -19,6 +21,7 @@ class UserRegistarationTestCase(TestCase):
         self.path = reverse('users:registration')
 
     def test_user_registaration_get(self):
+        # проверка отображения страницы регистрации
         response = self.client.get(self.path)
 
         self.assertEqual(response.status_code, HTTPStatus.OK)
@@ -31,12 +34,12 @@ class UserRegistarationTestCase(TestCase):
         self.assertFalse(User.objects.filter(username=username).exists())
         response = self.client.post(self.path, data=self.data)
 
-        #проверка создания пользователя
+        # проверка создания пользователя
         self.assertEqual(response.status_code, HTTPStatus.FOUND)
         self.assertRedirects(response, reverse('users:login'))
         self.assertTrue(User.objects.filter(username=username).exists())
 
-        #проверка создания объекта для верификации по емайлу
+        # проверка создания объекта для верификации по емайлу
         email_verification = EmailVerification.objects.filter(user__username=username)
         self.assertTrue(email_verification.exists())
         self.assertEqual(
@@ -45,7 +48,7 @@ class UserRegistarationTestCase(TestCase):
         )
 
     def test_user_registaration_post_error(self):
-        User.objects.create(username = self.data['username'])
+        User.objects.create(username=self.data['username'])
         response = self.client.post(self.path, self.data)
 
         self.assertEqual(response.status_code, HTTPStatus.OK)

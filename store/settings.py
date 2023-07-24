@@ -93,7 +93,7 @@ INTERNAL_IPS = [
     'localhost',
 ]
 
-# cache
+# cache with redis
 
 CACHES = {
     'default': {
@@ -179,12 +179,12 @@ LOGOUT_REDIRECT_URL = '/'
 # Sending emails
 load_dotenv()
 
-# EMAIL_HOST = os.getenv('EMAIL_HOST')
-# EMAIL_PORT = int(os.getenv('EMAIL_PORT'))
-# EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
-# EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
-# EMAIL_USE_SSL = True
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_PORT = int(os.getenv('EMAIL_PORT'))
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+EMAIL_USE_SSL = True
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # OAuth
 
@@ -203,3 +203,8 @@ SOCIALACCOUNT_PROVIDERS = {
         ],
     }
 }
+
+# Celery
+
+CELERY_BROKER_URL = 'redis://127.0.0.1:6379'
+CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379'

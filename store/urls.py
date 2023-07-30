@@ -12,6 +12,8 @@ urlpatterns = [
     path('products/', include('products.urls', namespace='products')),
     path('users/', include('users.urls', namespace='users')),
     path('accounts/', include('allauth.urls')),
+    # глобальное имя для адресов приложения orders
+    path('orders/', include('orders.urls', namespace='orders')),
 ]
 
 if settings.DEBUG:

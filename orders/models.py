@@ -2,7 +2,7 @@ from django.db import models
 
 from users.models import User
 
-class Orders(models.Model):
+class Order(models.Model):
     """
     Модель, хранящая данные о заказе пользователя
     """
@@ -30,3 +30,6 @@ class Orders(models.Model):
     def __str__(self):
         return f'Order #{self.id}. {self.first_name} {self.last_name}.'
     
+    class Meta():
+        verbose_name = 'Заказ'
+        verbose_name_plural = 'Заказы'

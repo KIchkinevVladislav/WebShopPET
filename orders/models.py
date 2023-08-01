@@ -21,10 +21,10 @@ class Order(models.Model):
     first_name = models.CharField(max_length=64, verbose_name='Имя')
     last_name = models.CharField(max_length=64, verbose_name='Фамилия')
     email = models.EmailField(max_length=256, verbose_name='Адрес электронной почты')
-    adress = models.CharField(max_length=256, verbose_name='Адрес доставки')
+    address = models.CharField(max_length=256, verbose_name='Адрес доставки')
     basket_history = models.JSONField(default=dict, verbose_name='Товары в доставке')
-    created = models.DateTimeField(auto_created=True)
-    staus = models.PositiveSmallIntegerField(default=CREATED, choices=STATUSES, verbose_name='Статус доставки товара')
+    created = models.DateTimeField(auto_now_add=True)
+    status = models.PositiveSmallIntegerField(default=CREATED, choices=STATUSES, verbose_name='Статус доставки товара')
     initiator = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь, создавший заказ')    
 
     def __str__(self):

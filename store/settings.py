@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'django_dump_load_utf8',
+    'django.contrib.humanize',
 
     'allauth',
     'allauth.account',

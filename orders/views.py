@@ -1,5 +1,7 @@
 import stripe
+from http import HTTPStatus
 
+from django.http import HttpResponseRedirect
 from django.views.generic.edit import CreateView
 from django.views.generic.base import TemplateView
 from django.urls import reverse, reverse_lazy
@@ -9,7 +11,7 @@ from django.conf import settings
 from common.views import TitleMixin
 from orders.forms import OrdersForm
 
-stripe.api_ke = settings.STRIPE_SECRET_KEY
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 class SuccessTemplateView(TitleMixin, TemplateView):
     template_name = 'orders/success.html'
@@ -38,9 +40,10 @@ class OrderCreateView(TitleMixin, CreateView):
                 },
             ],
             mode='payment',
-            success_url= '{}{}'.format(settings.DOMAIN_NAME, reverse('orders:order_success'),
-            cancel_url=YOUR_DOMAIN + '/cancel.html',
-        )3
+            success_url= '{}{}'.format(settings.DOMAIN_NAME, reverse('orders:order_success')),
+            cancel_url='{}{}'.format(settings.DOMAIN_NAME, reverse('orders:order_canceled')),
+        )
+        return HttpResponseRedirect(checkout_session.url, status=HTTPStatus.SEE_OTHER)
 
     def form_valid(self, form):
         form.instance.initiator = self.request.user

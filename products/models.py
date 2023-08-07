@@ -1,7 +1,12 @@
+from typing import Iterable, Optional
+import stripe
+
 from django.db import models
+from django.conf import settings
 
 from users.models import User
 
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 class ProductCategory(models.Model):
     name = models.CharField(
@@ -42,18 +47,41 @@ class Product(models.Model):
         upload_to='products_images',
         verbose_name='Изображение товара'
         )
+    stripe_product_price_id = models.CharField(
+        max_length=128, 
+        null=True, blank=True,
+        verbose_name='ID свойства price в базе Stripe'
+        )
     category = models.ForeignKey(
         to=ProductCategory,
         on_delete=models.PROTECT,
         verbose_name='Категория товара'
-        )
-
-    def __str__(self):
-        return f'Продукт: {self.name} | Категория: {self.category.name}'
+        )    
 
     class Meta():
         verbose_name = 'Товар'
         verbose_name_plural = 'Товары'
+
+    def __str__(self):
+        # строковое отображение объекта
+        return f'Продукт: {self.name} | Категория: {self.category.name}'
+    
+    def save(self, force_insert=False, force_update=False, using=None, update_fields = None):
+        # создание id товара хранящегося в Stripe в моделе
+        if not self.stripe_product_price_id:
+            stripe_product_prise = self.create_stripe_product_price()
+            self.stripe_product_price_id = stripe_product_prise['id']
+        return super(Product, self).save(force_insert, force_update, using, update_fields)
+    
+    def create_stripe_product_price(self):
+        # создание продукта и его цены в базе Stripe
+        stripe_product = stripe.Product.create(name=self.name)
+        stripe_product_price = stripe.Price.create(
+            product=stripe_product['id'], 
+            unit_amount=round(self.price * 100),
+            currency='rub'
+        )
+        return stripe_product_price
 
 
 class BasketQuerySet(models.QuerySet):
@@ -62,6 +90,19 @@ class BasketQuerySet(models.QuerySet):
 
     def total_quantity(self):
         return sum(basket.quantity for basket in self)
+    
+    def stripe_products(self):
+        # создание списка значений, содержаний данные о цене товара и количестве 
+        # для обработки OrderCreateView
+        # при передаче в checkout session Stripe
+        line_items = []
+        for basket in self:
+           item = {
+              'price': basket.product.stripe_product_price_id,
+              'quantity': basket.quantity,
+           }
+           line_items.append(item)
+        return line_items
 
 
 class Basket(models.Model):

@@ -28,17 +28,17 @@ class CanceledTemplateView(TemplateView):
     title = 'Store - Заказ отменен'
 
 class OrderListView(TitleMixin, ListView):
-    # отображение заказаов пользователя
-    template_name = 'order/orders.html'
+    # отображение заказов пользователя
+    template_name = 'orders/orders.html'
     title = 'Store - Заказы'
     queryset = Order.objects.all()
+    ordering = ('-created')
 
     def get_queryset(self):
         # переопредялем метод чтобы получать данные только текущего пользователя
         queryset = super(OrderListView, self).get_queryset()
         return queryset.filter(initiator=self.request.user)
     
-
 
 class OrderCreateView(TitleMixin, CreateView):
     template_name = 'orders/order-create.html'

@@ -124,16 +124,26 @@ class Basket(models.Model):
         auto_now_add=True, 
         verbose_name='Дата создания'
         )
+
+    class Meta():
+        verbose_name = 'Корзина с товарами'
+        verbose_name_plural = 'Корзины с товарами'
+    
+    objects = BasketQuerySet.as_manager()
     
     def __str__(self):
         return f'Корзина для пользователя {self.user.username} | Товары: {self.product.name}'
     
-    objects = BasketQuerySet.as_manager()
-
     def sum(self):
         return self.product.price * self.quantity
     
-    class Meta():
-        verbose_name = 'Корзина с товарами'
-        verbose_name_plural = 'Корзины с товарами'
+    def de_json(self):
+        # создаем json-объект для передачи данных в order.html
+        basket_item = {
+            'product_name': self.product.name,
+            'quantity': self.quantity,
+            'price': float(self.product.price),
+            'sum': float(self.sum()),
+        }
+        return basket_item
     

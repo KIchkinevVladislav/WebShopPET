@@ -78,9 +78,9 @@ class Product(models.Model):
         stripe_product = stripe.Product.create(name=self.name)
         stripe_product_price = stripe.Price.create(
             product=stripe_product['id'], 
-            unit_amount=round(self.price * 100),
+            unit_amount=round(self.price * 100), 
             currency='rub'
-        )
+            )
         return stripe_product_price
 
 
@@ -97,11 +97,11 @@ class BasketQuerySet(models.QuerySet):
         # при передаче в checkout session Stripe
         line_items = []
         for basket in self:
-           item = {
-              'price': basket.product.stripe_product_price_id,
-              'quantity': basket.quantity,
-           }
-           line_items.append(item)
+            item = {
+                'price': basket.product.stripe_product_price_id,
+                'quantity': basket.quantity,
+            }
+            line_items.append(item)
         return line_items
 
 

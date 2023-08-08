@@ -1,9 +1,12 @@
+from typing import Any
+from django.db.models.query import QuerySet
 import stripe
 from http import HTTPStatus
 
 from django.http import HttpResponseRedirect, HttpResponse
 from django.views.generic.edit import CreateView
 from django.views.generic.base import TemplateView
+from django.views.generic.list import ListView
 from django.urls import reverse, reverse_lazy
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
@@ -23,6 +26,18 @@ class SuccessTemplateView(TitleMixin, TemplateView):
 class CanceledTemplateView(TemplateView):
     template_name = 'orders/canceled.html'
     title = 'Store - Заказ отменен'
+
+class OrderListView(TitleMixin, ListView):
+    # отображение заказаов пользователя
+    template_name = 'order/orders.html'
+    title = 'Store - Заказы'
+    queryset = Order.objects.all()
+
+    def get_queryset(self):
+        # переопредялем метод чтобы получать данные только текущего пользователя
+        queryset = super(OrderListView, self).get_queryset()
+        return queryset.filter(initiator=self.request.user)
+    
 
 
 class OrderCreateView(TitleMixin, CreateView):
@@ -88,8 +103,8 @@ def fulfill_order(session):
   order.update_after_payment()
   
 """
-при локальном запуске может не работать логика функции fulfill_order,
-если не переданы команды для Stripe:
+При локальном запуске может не работать логика функции fulfill_order,
+Если не переданы команды для Stripe:
 $ stripe login 
 $ stripe listen --forward-to localhost:8000/webhook/stripe/
 """

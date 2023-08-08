@@ -1,11 +1,11 @@
-from typing import Any
-from django.db.models.query import QuerySet
+from typing import Any, Dict
 import stripe
 from http import HTTPStatus
 
 from django.http import HttpResponseRedirect, HttpResponse
 from django.views.generic.edit import CreateView
 from django.views.generic.base import TemplateView
+from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.urls import reverse, reverse_lazy
 from django.conf import settings
@@ -27,6 +27,7 @@ class CanceledTemplateView(TemplateView):
     template_name = 'orders/canceled.html'
     title = 'Store - Заказ отменен'
 
+
 class OrderListView(TitleMixin, ListView):
     # отображение заказов пользователя
     template_name = 'orders/orders.html'
@@ -39,6 +40,18 @@ class OrderListView(TitleMixin, ListView):
         queryset = super(OrderListView, self).get_queryset()
         return queryset.filter(initiator=self.request.user)
     
+
+class OrderDetailView(DetailView):
+    # отображение данных о заказе
+    template_name = 'orders/order.html'
+    model = Order
+
+    def get_context_data(self, **kwargs):
+        # переопределяем метод, чтобы передавать в заголовок шаблона номер заказа
+        context = super(OrderDetailView, self).get_context_data(**kwargs)
+        context['title'] = f'Store - Заказ № {self.object.id}'
+        return context  
+
 
 class OrderCreateView(TitleMixin, CreateView):
     template_name = 'orders/order-create.html'

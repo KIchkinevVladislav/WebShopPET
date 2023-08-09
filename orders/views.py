@@ -1,5 +1,4 @@
 from http import HTTPStatus
-from typing import Any, Dict
 
 import stripe
 from django.conf import settings
@@ -17,6 +16,7 @@ from orders.models import Order
 from products.models import Basket
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
+
 
 class SuccessTemplateView(TitleMixin, TemplateView):
     template_name = 'orders/success.html'
@@ -39,7 +39,7 @@ class OrderListView(TitleMixin, ListView):
         # переопредялем метод чтобы получать данные только текущего пользователя
         queryset = super(OrderListView, self).get_queryset()
         return queryset.filter(initiator=self.request.user)
-    
+
 
 class OrderDetailView(DetailView):
     # отображение данных о заказе
@@ -50,7 +50,7 @@ class OrderDetailView(DetailView):
         # переопределяем метод, чтобы передавать в заголовок шаблона номер заказа
         context = super(OrderDetailView, self).get_context_data(**kwargs)
         context['title'] = f'Store - Заказ № {self.object.id}'
-        return context  
+        return context
 
 
 class OrderCreateView(TitleMixin, CreateView):
@@ -69,7 +69,7 @@ class OrderCreateView(TitleMixin, CreateView):
             line_items=baskets.stripe_products(),
             metadata={'order_id': self.object.id},
             mode='payment',
-            success_url= '{}{}'.format(settings.DOMAIN_NAME, reverse('orders:order_success')),
+            success_url='{}{}'.format(settings.DOMAIN_NAME, reverse('orders:order_success')),
             cancel_url='{}{}'.format(settings.DOMAIN_NAME, reverse('orders:order_canceled')),
         )
         return HttpResponseRedirect(checkout_session.url, status=HTTPStatus.SEE_OTHER)
@@ -109,15 +109,16 @@ def stripe_webhook_view(request):
 
 
 def fulfill_order(session):
-  # передаем данные сессии оплаты
-  # обновляем данные в модели Order
-  order_id = int(session.metadata.order_id)
-  order = Order.objects.get(id=order_id)
-  order.update_after_payment()
-  
+    # передаем данные сессии оплаты
+    # обновляем данные в модели Order
+    order_id = int(session.metadata.order_id)
+    order = Order.objects.get(id=order_id)
+    order.update_after_payment()
+
+
 """
 При локальном запуске может не работать логика функции fulfill_order,
 Если не переданы команды для Stripe:
-$ stripe login 
+$ stripe login
 $ stripe listen --forward-to localhost:8000/webhook/stripe/
 """

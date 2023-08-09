@@ -51,6 +51,7 @@ class UserRegistrationForm(UserCreationForm):
         sent_email_verification.delay(user.id)
         return user
 
+
 class UserProfileForm(UserChangeForm):
     first_name = forms.CharField(widget=forms.TextInput(attrs={
         'class': 'form-control py-4'}))

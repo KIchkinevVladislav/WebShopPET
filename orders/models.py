@@ -27,15 +27,15 @@ class Order(models.Model):
     basket_history = models.JSONField(default=dict, verbose_name='Товары в доставке')
     created = models.DateTimeField(auto_now_add=True)
     status = models.PositiveSmallIntegerField(default=CREATED, choices=STATUSES, verbose_name='Статус доставки товара')
-    initiator = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь, создавший заказ')    
+    initiator = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь, создавший заказ')
 
     class Meta():
         verbose_name = 'Заказ'
         verbose_name_plural = 'Заказы'
-        
+
     def __str__(self):
         return f'Order #{self.id}. {self.first_name} {self.last_name}.'
-    
+
     def update_after_payment(self):
         # обновление статуса заказа после оплаты
         # создание истории заказа

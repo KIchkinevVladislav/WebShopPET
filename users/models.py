@@ -11,7 +11,7 @@ class User(AbstractUser):
         upload_to='users_images',
         null=True,
         blank=True,
-        verbose_name= 'Изображание пользователя'
+        verbose_name='Изображание пользователя'
         )
     is_verified_email = models.BooleanField(default=False, verbose_name='Факт подтверждения электрононй почты')
     email = models.EmailField(unique=True, blank=False, verbose_name='Электронная почта')
@@ -25,7 +25,7 @@ class EmailVerification(models.Model):
 
     def __str__(self) -> str:
         return f'EmailVerification object for {self.user.email}'
-    
+
     def send_verification_email(self):
         link = reverse('users:email_verification', kwargs={'email': self.user.email, 'code': self.code})
         verification_link = f'{settings.DOMAIN_NAME}{link}'
@@ -44,5 +44,3 @@ class EmailVerification(models.Model):
 
     def is_expired(self):
         return True if now() >= self.expiration else False
-    
-

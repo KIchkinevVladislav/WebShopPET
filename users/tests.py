@@ -9,9 +9,9 @@ from users.models import EmailVerification, User
 
 
 class UserRegistarationTestCase(TestCase):
-    """Проверка логики регистрации пользователя"""
-
-
+    """
+    Проверка логики регистрации пользователя
+    """
     def setUp(self):
         self.data = {
             'first_name': 'Slava', 'last_name': 'Kich',
@@ -27,7 +27,7 @@ class UserRegistarationTestCase(TestCase):
         self.assertEqual(response.status_code, HTTPStatus.OK)
         self.assertEqual(response.context_data['title'], 'Store - Регистрация')
         self.assertTemplateUsed(response, 'users/registration.html')
-        
+
     def test_user_registaration_post_success(self):
 
         username = self.data['username']

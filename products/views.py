@@ -57,3 +57,8 @@ def backet_remove(request, basket_id):
     basket.delete()
 
     return HttpResponseRedirect(request.META['HTTP_REFERER'])
+
+
+class AboutView(TitleMixin, TemplateView):
+    template_name = 'products/about.html'
+    title = 'Store - О проекте и авторе.'

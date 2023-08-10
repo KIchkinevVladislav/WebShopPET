@@ -1,0 +1,48 @@
+{% extends 'users/base.html' %}
+
+{% block content %} 
+<main>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow-lg border-0 rounded-lg mt-5">
+                    <div class="card-header">
+                        <h3 class="text-center font-weight-light my-4">Информация об авторе и проекте</h3>
+                    </div>
+                    <div class="card-body text-center">
+                        <h4>
+                            <p>PET-проект на Django:</p>
+                            <p class="normal-text">Реализация работы он-лайн магазина.</p>
+                            <p>Использованные технологии: </p>
+                            <p class="normal-text">Django, Bootstrap, Redis, Celery, Pytest, Stripe.</p>
+                        </h4>
+                        <a class="custom-button" href="https://github.com/KIchkinevVladislav">
+                            Автор: Владислав Кичкинев
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <style>
+        .normal-text {
+            font-weight: normal;
+        }
+        .custom-button {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #529be9;
+        color: white;
+        text-align: center;
+        text-decoration: none;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+    }
+    .custom-button:hover {
+        background-color: #2988ee;
+    }
+    </style>
+
+</main>
+{% endblock %}

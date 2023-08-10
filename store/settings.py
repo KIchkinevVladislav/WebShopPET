@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django_dump_load_utf8',
     'django.contrib.humanize',
-    'django.contrib.flatpages',
 
     'allauth',
     'allauth.account',
@@ -67,7 +66,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
 ]
 
 ROOT_URLCONF = 'store.urls'

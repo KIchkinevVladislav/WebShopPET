@@ -15,6 +15,7 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     # глобальное имя для адресов приложения orders
     path('orders/', include('orders.urls', namespace='orders')),
+    # url для вебхук страйп
     path('webhook/stripe/', stripe_webhook_view, name='stripe_webhook'),
 ]
 

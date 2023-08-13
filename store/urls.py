@@ -5,7 +5,7 @@ from django.contrib import admin
 from django.urls import include, path
 
 from orders.views import stripe_webhook_view
-from products.views import IndexView, AboutView
+from products.views import AboutView, IndexView
 
 urlpatterns = [
     path('admin/', admin.site.urls),

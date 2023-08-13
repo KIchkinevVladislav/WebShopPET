@@ -14,7 +14,6 @@ import os
 from pathlib import Path
 
 import environ
-from dotenv import load_dotenv
 
 env = environ.Env(
     DEBUG=(bool),
@@ -79,6 +78,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.github',
     'debug_toolbar',
+    'django_extensions',
 
     'products',
     'orders',
@@ -210,9 +210,6 @@ AUTH_USER_MODEL = 'users.User'
 LOGIN_URL = '/users/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
-
-# Sending emails
-load_dotenv()
 
 if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

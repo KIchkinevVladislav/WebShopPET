@@ -17,6 +17,8 @@ urlpatterns = [
     path('orders/', include('orders.urls', namespace='orders')),
     # url для вебхук страйп
     path('webhook/stripe/', stripe_webhook_view, name='stripe_webhook'),
+    # для доступа к интефейсу api
+    path('api/', include('api.urls', namespace='api')),
     # информация о проекте и авторе
     path('about', AboutView.as_view(), name='about'),
 ]

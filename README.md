@@ -30,6 +30,7 @@ https://store-prod.ru/
 Создание локального окружения
 
 `python3.9 -m venv venv`
+
 `source ../venv/bin/activate`
 
 
@@ -46,6 +47,7 @@ https://store-prod.ru/
 Заполняем базу данных:
 
 `python manage.py loaddata products/fixtures/categories.json`
+
 `python manage.py loaddata products/fixtures/goods.json`
 
 Для доступа к панели администратора создайте администратора:
@@ -53,9 +55,11 @@ https://store-prod.ru/
 `python manage.py createsuperuser`
 
 Запуск [Redis Server](https://redis.io/docs/getting-started/installation/):
+
 `redis-server`
 
 Запуск Celery
+
 `celery -A store worker --loglevel=INFO`
 
 Запустите приложение:
